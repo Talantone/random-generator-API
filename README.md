@@ -2,7 +2,7 @@
 generator of the random numbers or strings for my employer
 
 # generate documentation
-`swag swag init -d cmd`
+`swag swag init -g cmd/main.go`
 
 # run project
 `go run cmd/main.go`

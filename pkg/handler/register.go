@@ -2,15 +2,18 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"random-generator-API/models"
-	"random-generator-API/pkg"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	_ "random-generator-API/docs"
 )
 
-func RegisterHTTPEndpoints[T models.RandomItemTypes](router *gin.RouterGroup, uc pkg.UseCase[T]) {
-	h := NewHandler(uc)
+func (h *Handler) RegisterHTTPEndpoints() *gin.Engine {
+	router := gin.New()
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	generator := router.Group("/generator")
 	{
 		generator.POST("/generate", h.Generate)
 		generator.GET("/result", h.Result)
 	}
+	return router
 }

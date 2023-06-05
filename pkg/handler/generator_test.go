@@ -12,12 +12,12 @@ import (
 	"testing"
 )
 
-func TestGenerate[T models.RandomItemTypes](t *testing.T) {
+func TestGenerate(t *testing.T) {
 	r := gin.Default()
-	group := r.Group("/api", func(c *gin.Context) {})
-	uc := new(usecase.GeneratorUseCaseMock[T])
-
-	RegisterHTTPEndpoints(group, uc)
+	//group := r.Group("/api", func(c *gin.Context) {})
+	uc := new(usecase.GeneratorUseCaseMock)
+	handler := NewHandler(uc)
+	handler.RegisterHTTPEndpoints()
 
 	input := models.Amount{
 		Amount: 10,
@@ -35,15 +35,15 @@ func TestGenerate[T models.RandomItemTypes](t *testing.T) {
 	assert.Equal(t, 200, w.Code)
 }
 
-func TestGet[T models.RandomItemTypes](t *testing.T) {
+func TestGet(t *testing.T) {
 
 	r := gin.Default()
-	group := r.Group("/api", func(c *gin.Context) {})
+	//group := r.Group("/api", func(c *gin.Context) {})
 
-	uc := new(usecase.GeneratorUseCaseMock[T])
-
-	RegisterHTTPEndpoints(group, uc)
-	res := models.RandomItem[string]{
+	uc := new(usecase.GeneratorUseCaseMock)
+	handler := NewHandler(uc)
+	handler.RegisterHTTPEndpoints()
+	res := models.RandomItem{
 		Result: "testresult",
 	}
 	uc.On("Result").Return(res, nil)

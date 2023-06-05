@@ -1,0 +1,9 @@
+basePath: /generator
+host: localhost:8000
+info:
+  contact: {}
+  description: API Server for Generator Application
+  title: GeneratorApp API
+  version: "1.0"
+paths: {}
+swagger: "2.0"

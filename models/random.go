@@ -1,9 +1,13 @@
 package models
 
 type RandomItemTypes interface {
-	int | string
+	~string | int
 }
 
-type RandomItem[T RandomItemTypes] struct {
-	Result T `json:"result"`
+type RandomItem struct {
+	Result string `json:"result"`
+}
+
+func NewRandomItem(result string) *RandomItem {
+	return &RandomItem{Result: result}
 }

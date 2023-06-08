@@ -15,6 +15,6 @@ METHOD [POST]
 }
 Generates amount of random numbers and strings
 
-`127.0.0.1:8000/generator/result`
+`127.0.0.1:8000/generator/result/:id`
 METHOD [GET]
-Returns last generated random sequence in the string format
+Returns element of the last generated random sequence in the string format

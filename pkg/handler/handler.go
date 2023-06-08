@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"random-generator-API/models"
 	"random-generator-API/pkg"
+	"strconv"
 )
 
 type Handler struct {
@@ -37,8 +38,7 @@ func (h *Handler) Generate(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	ch := make(chan string, input.Amount)
-	err := h.useCase.Generate(input, ch)
+	err := h.useCase.Generate(input)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -61,10 +61,11 @@ func (h *Handler) Generate(c *gin.Context) {
 // @Failure 400,404 {object} Error
 // @Failure 500	{object} Error
 // @Failure default	{object} Error
-// @Router generator/result [get]
+// @Router generator/result/:id [get]
 
 func (h *Handler) Result(c *gin.Context) {
-	res, err := h.useCase.GetLastOutput()
+	id, err := strconv.Atoi(c.Param("id"))
+	res, err := h.useCase.GetLastOutput(id)
 
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())

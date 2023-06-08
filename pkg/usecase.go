@@ -5,6 +5,6 @@ import (
 )
 
 type UseCase interface {
-	Generate(amount *models.Amount, c chan string) error
-	GetLastOutput() (*models.RandomItem, error)
+	Generate(amount *models.Amount) error
+	GetLastOutput(id int) (*models.RandomItem, error)
 }

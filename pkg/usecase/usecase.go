@@ -1,12 +1,15 @@
 package usecase
 
 import (
-	"log"
-	"os"
+	"errors"
 	"random-generator-API/models"
 	"random-generator-API/pkg/generator"
 	"sync"
 )
+
+const xthreads = 5
+
+var m = make(map[int]string)
 
 type GeneratorUseCase struct {
 	generator *generator.RandomGenerator
@@ -18,27 +21,40 @@ func NewGeneratorUseCase(generator *generator.RandomGenerator) *GeneratorUseCase
 	}
 }
 
-func (g *GeneratorUseCase) Generate(amount *models.Amount, c chan string) error {
-	wg := &sync.WaitGroup{}
+func (g *GeneratorUseCase) Generate(amount *models.Amount) error {
+	m = make(map[int]string)
+	c := make(chan string, amount.Amount)
 
+	wg := sync.WaitGroup{}
+	wg.Add(amount.Amount)
+	guard := make(chan struct{}, 100)
 	for i := 0; i < amount.Amount; i++ {
-		wg.Add(1)
-		go g.generator.Producer.GenerateRandom(c)
-		wg.Done()
+		go func(c chan string) {
+			guard <- struct{}{}
+			defer func() {
+				wg.Done()
+				<-guard
+			}()
+
+			g.generator.Producer.GenerateRandom(c)
+		}(c)
+
 	}
 	wg.Wait()
-	err := g.generator.Consumer.Consume(c)
+
+	err := g.generator.Consumer.Consume(m, amount.Amount, c)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (g *GeneratorUseCase) GetLastOutput() (*models.RandomItem, error) {
-	content, err := os.ReadFile("generated.txt")
-	if err != nil {
-		log.Fatal(err)
+func (g *GeneratorUseCase) GetLastOutput(id int) (*models.RandomItem, error) {
+	_, ok := m[id]
+	item := models.NewRandomItem(m[id])
+	if !ok {
+		return item, errors.New("element doesn't exist")
 	}
-	item := models.NewRandomItem(string(content))
-	return item, err
+
+	return item, nil
 }

@@ -13,7 +13,7 @@ func (h *Handler) RegisterHTTPEndpoints() *gin.Engine {
 	generator := router.Group("/generator")
 	{
 		generator.POST("/generate", h.Generate)
-		generator.GET("/result", h.Result)
+		generator.GET("/result/:id", h.Result)
 	}
 	return router
 }

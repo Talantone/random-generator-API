@@ -17,7 +17,7 @@ type Producer struct {
 
 func (p *Producer) GenerateRandom(c chan string) {
 	if v := rand.New(rand.NewSource(time.Now().UnixNano())).Intn(2); v == 1 {
-		c <- String(len(charset))
+		c <- String(11)
 	} else {
 		c <- strconv.Itoa(seededRand.Intn(100000000))
 	}

@@ -1,7 +1,7 @@
 package models
 
 type RandomItemTypes interface {
-	~string | int
+	any
 }
 
 type RandomItem struct {

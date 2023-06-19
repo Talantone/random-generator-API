@@ -7,8 +7,6 @@ import (
 	"sync"
 )
 
-const xthreads = 5
-
 var m = make(map[int]string)
 
 type GeneratorUseCase struct {
@@ -52,6 +50,7 @@ func (g *GeneratorUseCase) Generate(amount *models.Amount) error {
 func (g *GeneratorUseCase) GetLastOutput(id int) (*models.RandomItem, error) {
 	_, ok := m[id]
 	item := models.NewRandomItem(m[id])
+
 	if !ok {
 		return item, errors.New("element doesn't exist")
 	}

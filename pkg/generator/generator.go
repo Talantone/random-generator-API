@@ -6,7 +6,7 @@ import (
 	"random-generator-API/models"
 )
 
-type Generator[T models.RandomItemTypes] interface {
+type Generator interface {
 	Generate(ctx context.Context, amount *models.Amount) error
 	GetLastOutput(ctx context.Context) (*models.RandomItem, error)
 }
